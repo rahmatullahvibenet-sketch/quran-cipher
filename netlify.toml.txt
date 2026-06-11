@@ -1,0 +1,46 @@
+# ════════════════════════════════════════════════════════
+#  FORGE KEY SYSTEM — Netlify Config
+#  Deploy: forge-key-system-v3.html + rm-engine function
+# ════════════════════════════════════════════════════════
+
+[build]
+  publish   = "."
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+# ── د rm-engine function لپاره timeout ──────────────────
+[functions."rm-engine"]
+  timeout = 10
+
+# ── Security Headers ─────────────────────────────────────
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options           = "DENY"
+    X-Content-Type-Options    = "nosniff"
+    X-XSS-Protection          = "1; mode=block"
+    Referrer-Policy           = "strict-origin-when-cross-origin"
+    Permissions-Policy        = "camera=(), microphone=(), geolocation=()"
+    Content-Security-Policy   = "default-src 'self' https://www.gstatic.com https://fonts.googleapis.com https://fonts.gstatic.com https://safechat-7084d.firebaseio.com https://firestore.googleapis.com; script-src 'self' 'unsafe-inline' https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;"
+
+# ── Function CORS ────────────────────────────────────────
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Access-Control-Allow-Origin  = "*"
+    Access-Control-Allow-Headers = "Content-Type, Authorization"
+    Access-Control-Allow-Methods = "POST, OPTIONS"
+
+# ── د HTML فایل redirect ─────────────────────────────────
+[[redirects]]
+  from   = "/"
+  to     = "/forge-key-system-v3.html"
+  status = 200
+
+# ── د 404 لپاره ─────────────────────────────────────────
+[[redirects]]
+  from   = "/*"
+  to     = "/forge-key-system-v3.html"
+  status = 404
